@@ -1,0 +1,7 @@
+﻿Vehicle Type,Count,Production Share,freq,mpg,kpl
+Diesel,"32,671",0.455382792,46,4.5,1.91
+Gasoline,"1,178",0.016414353,1,4,1.7
+Natural Gas,"19,151",0.266933508,27,4,1.7
+Hybrid,"13,872",0.193358473,19,5.5,2.34
+Biodiesel,"4,275",0.059584432,6,4.5,1.91
+Hydrogen Fuel Cell,597,0.008326441,1,6,2.55

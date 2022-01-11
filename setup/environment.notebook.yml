@@ -1,0 +1,10 @@
+name: aces_metrics
+channels:
+- main
+dependencies:
+- ipywidgets=7.5.1
+- matplotlib=3.2.2
+- pandas=1.1.1
+- scipy=1.5.0
+- seaborn=0.11.0
+prefix: /Users/shankari/OSS/anaconda/envs/aces_metrics
