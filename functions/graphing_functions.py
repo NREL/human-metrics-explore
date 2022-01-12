@@ -132,4 +132,5 @@ def summarize_params():
             summary[param][mode]["min"] = max(summary[param][mode]["mean"] - 3.0 * summary[param][mode]["std"], 0)
             summary[param][mode]["max"] = summary[param][mode]["mean"] + 3.0 * summary[param][mode]["std"]
             summary[param][mode]["step"] = (summary[param][mode]["max"] - summary[param][mode]["min"]) / 10
+            summary[param][mode]["value"] = summary[param][mode]["mean"]
     return summary
