@@ -8,5 +8,5 @@
 # set -e
 
 source setup/activate_conda.sh
-conda env update --name aces_metrics --file environment.yml
+conda env update --name aces_metrics --file setup/environment.yml
 conda activate aces_metrics
