@@ -1,12 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import ipywidgets as widgets
 
 from params.generate_all import generate_all
 from functions.vphpl_pphpl_calc import vphpl_pphpl_calc
-
-# Read the parameters and generate baseline values
-params = generate_all()
-results = vphpl_pphpl_calc(params)
 
 #########Std dev varying functions#########
 
@@ -118,8 +115,8 @@ def cdf_plot(data, labels, xaxis_title = "",colors = ['blue','orange','green']):
     plt.legend(loc="lower right")
     plt.show()
 
-def get_raw_data():
-    return params, results
+def get_data():
+    return params, results, summary
 
 def summarize_params():
     summary = {}
@@ -134,3 +131,22 @@ def summarize_params():
             summary[param][mode]["step"] = (summary[param][mode]["max"] - summary[param][mode]["min"]) / 10
             summary[param][mode]["value"] = summary[param][mode]["mean"]
     return summary
+
+def create_slider(param_mode):
+    param, mode = param_mode.split("_")
+    return widgets.FloatSlider(**summary[param][mode])
+
+def create_sliders(slider_list):
+    return dict([(slider_name, create_slider(slider_name)) for slider_name in slider_list])
+
+def change_mean_from_kwargs(param_mode, kwargs):
+    param, mode = param_mode.split("_")
+    new_mean = kwargs[param_mode]
+    print("Changing mean for %s %s to %.4f by %.4f" % (param, mode, new_mean, new_mean - summary[param][mode]["mean"]))
+    # Don't forget to flatten here; otherwise the plot will fail because we can't calculate max of an array
+    return (params[param][mode] + (new_mean - summary[param][mode]["mean"])).flatten()
+
+# Read the parameters and generate baseline values
+params = generate_all()
+results = vphpl_pphpl_calc(params)
+summary = summarize_params()
