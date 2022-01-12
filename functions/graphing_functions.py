@@ -1,12 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import ipywidgets as widgets
 
 from params.generate_all import generate_all
 from functions.vphpl_pphpl_calc import vphpl_pphpl_calc
-
-# Read the parameters and generate baseline values
-params = generate_all()
-results = vphpl_pphpl_calc(params)
 
 #########Std dev varying functions#########
 
@@ -89,7 +86,9 @@ def cdf_plot(data, labels, xaxis_title = "",colors = ['blue','orange','green']):
             else:
                 linewidth=2
                 linestyle="-"
+            print("About to print data at index %d with label %s " % (idx, labels[idx]))
             values, base = np.histogram(data[idx], bins=41)
+            # print("About to print %s" % data)
             base[-1]= max([max(x) for x in data])
             cumulative = np.cumsum(values)
             cumulative = np.append(cumulative,100)
@@ -99,7 +98,7 @@ def cdf_plot(data, labels, xaxis_title = "",colors = ['blue','orange','green']):
             plt.axhline(y=.5, xmin=0, xmax=1, color='red',linestyle=":",linewidth=1)
             plt.axvline(x=median, ymin=0, ymax=0.5,color=colors[idx],linestyle=":",linewidth=2)
             #plt.text(median, idx/20, round(median,3), color=colors[idx], fontsize=14)
-            print(median)
+            print("summary stats: mean %.6f, median: %.6f" % (np.mean(data[idx]), median))
             ######
             
             plt.plot(base, cumulative/100, linewidth=linewidth,linestyle=linestyle,label = labels[idx],c=colors[idx])
@@ -116,8 +115,38 @@ def cdf_plot(data, labels, xaxis_title = "",colors = ['blue','orange','green']):
     plt.legend(loc="lower right")
     plt.show()
 
-def get_baseline():
-    return results
+def get_data():
+    return params, results, summary
 
-def peit1_calc(ms, avo, ee):
-    return ms * (1/avo) * (1/ee)
+def summarize_params():
+    summary = {}
+    for param in params:
+        # param is "ms", "occ", "FE" etc
+        summary[param] = {}
+        for mode in params[param]:
+            # mode is "wb", "pvt" "bus"
+            summary[param][mode] = {"mean": np.mean(params[param][mode]), "std": np.std(params[param][mode])}
+            summary[param][mode]["min"] = max(summary[param][mode]["mean"] - 3.0 * summary[param][mode]["std"], 0)
+            summary[param][mode]["max"] = summary[param][mode]["mean"] + 3.0 * summary[param][mode]["std"]
+            summary[param][mode]["step"] = (summary[param][mode]["max"] - summary[param][mode]["min"]) / 10
+            summary[param][mode]["value"] = summary[param][mode]["mean"]
+    return summary
+
+def create_slider(param_mode):
+    param, mode = param_mode.split("_")
+    return widgets.FloatSlider(**summary[param][mode])
+
+def create_sliders(slider_list):
+    return dict([(slider_name, create_slider(slider_name)) for slider_name in slider_list])
+
+def change_mean_from_kwargs(param_mode, kwargs):
+    param, mode = param_mode.split("_")
+    new_mean = kwargs[param_mode]
+    print("Changing mean for %s %s to %.4f by %.4f" % (param, mode, new_mean, new_mean - summary[param][mode]["mean"]))
+    # Don't forget to flatten here; otherwise the plot will fail because we can't calculate max of an array
+    return (params[param][mode] + (new_mean - summary[param][mode]["mean"])).flatten()
+
+# Read the parameters and generate baseline values
+params = generate_all()
+results = vphpl_pphpl_calc(params)
+summary = summarize_params()
