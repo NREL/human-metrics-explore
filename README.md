@@ -16,8 +16,9 @@ Run in your browser without any setup using binder.
 
 This is primarily needed if you want to modify or extend the analysis.
 This repo has Continous Integration (CI) enabled. So if any of these steps
-fail, please compare your environment and output against CI and bring them into
-alignment.
+fail:
+- please compare your environment and output against CI and bring them into alignment
+- if that also fails, please **file an issue** with the output of each CI step in your environment.
 
 #### One-time installation
 
