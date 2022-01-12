@@ -33,7 +33,9 @@ jobs:
       shell: bash -l {0}
       run: |
         source setup/setup_conda.sh $EXP_CONDA_VER $PLATFORM
-        ls -al $HOME | grep miniconda
+        echo "Seeing if setup succeeded"
+        ls -al $HOME
+        echo "Proceeding to setup notebook"
         source setup/setup_notebook.sh
         source setup/activate.sh
 
