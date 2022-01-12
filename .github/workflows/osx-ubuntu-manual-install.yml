@@ -56,12 +56,13 @@ jobs:
     - name: Activate the newly setup conda
       shell: bash -l {0}
       run: |
+        ls -l /home/runner | grep miniconda
         source setup/activate_conda.sh
 
     - name: Setup the environment
       shell: bash -l {0}
       run: |
-        source setup/setup.sh
+        source setup/setup_notebook.sh
 
     - name: Activate the newly setup environment
       shell: bash -l {0}

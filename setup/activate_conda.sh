@@ -9,5 +9,8 @@ if [ -f $SOURCE_SCRIPT ]; then
 else
     echo "$SOURCE_SCRIPT not found, run 'bash setup/setup_conda.sh $EXP_CONDA_VER <platform>' to get the correct version"
     echo "Or install manually after downloading from https://repo.anaconda.com/miniconda/"
+    if [[ $CI ]]; then
+        exit(1)
+    fi
 fi
 
