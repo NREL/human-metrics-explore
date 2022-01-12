@@ -17,7 +17,6 @@ jobs:
   test:
     env: 
       EXP_CONDA_VER: 4.8.3
-      SOURCE_SCRIPT: /Users/runner/miniconda-4.7.12/etc/profile.d/conda.sh
       PLATFORM: MacOSX-x86_64
     # We run only on macos here since the repo2docker tests will run on ubuntu
     runs-on: macos-latest
@@ -34,6 +33,7 @@ jobs:
       shell: bash -l {0}
       run: |
         source setup/setup_conda.sh $EXP_CONDA_VER $PLATFORM
+        ls -al $HOME | grep miniconda
         source setup/setup_notebook.sh
         source setup/activate.sh
 
