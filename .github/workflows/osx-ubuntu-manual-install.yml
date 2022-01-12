@@ -51,18 +51,26 @@ jobs:
     - name: Check whether the CI environment variable is set
       shell: bash -l {0}
       run: |
-        source ${{ matrix.SOURCE_SCRIPT }}
         echo $CI
+
+    - name: Activate the newly setup conda
+      shell: bash -l {0}
+      run: |
+        source setup/activate_conda.sh
 
     - name: Setup the environment
       shell: bash -l {0}
       run: |
-        conda --version
-        which conda
-        source ${{ matrix.SOURCE_SCRIPT }}
-        conda --version
         source setup/setup.sh
-        echo "About to activate environment"
+
+    - name: Activate the newly setup environment
+      shell: bash -l {0}
+      run: |
+        source setup/activate.sh
+
+    - name: Verify that we have an environment other than the base
+      shell: bash -l {0}
+      run: |
         source setup/activate.sh
         conda env list
 
