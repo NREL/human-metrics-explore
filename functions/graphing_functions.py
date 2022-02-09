@@ -121,7 +121,7 @@ def get_data():
 def summarize_params():
     summary = {}
     for param in params:
-        # param is "ms", "occ", "FE" etc
+        # param is "ms", "occ", "FE" etc. Also includes vphpl
         summary[param] = {}
         for mode in params[param]:
             # mode is "wb", "pvt" "bus"
@@ -130,15 +130,9 @@ def summarize_params():
             summary[param][mode]["max"] = summary[param][mode]["mean"] + 3.0 * summary[param][mode]["std"]
             summary[param][mode]["step"] = (summary[param][mode]["max"] - summary[param][mode]["min"]) / 10
             summary[param][mode]["value"] = summary[param][mode]["mean"]
-    #Add VPHPL
-    summary['vphpl']={}
-    for mode in params[param]:
-        summary['vphpl'][mode] = {"mean": np.mean(results['vphpl'][mode]), "std": np.std(results['vphpl'][mode])}
-        summary['vphpl'][mode]["min"] = max(summary['vphpl'][mode]["mean"] - 3.0 * summary['vphpl'][mode]["std"], 0)
-        summary['vphpl'][mode]["max"] = summary['vphpl'][mode]["mean"] + 3.0 * summary['vphpl'][mode]["std"]
-        summary['vphpl'][mode]["step"] = (summary['vphpl'][mode]["max"] - summary['vphpl'][mode]["min"]) / 10
-        summary['vphpl'][mode]["value"] = summary['vphpl'][mode]["mean"]
     return summary
+
+
 
 def create_slider(param_mode):
     param, mode = param_mode.split("_")
@@ -152,12 +146,11 @@ def change_mean_from_kwargs(param_mode, kwargs):
     new_mean = kwargs[param_mode]
     print("Changing mean for %s %s to %.4f by %.4f" % (param, mode, new_mean, new_mean - summary[param][mode]["mean"]))
     # Don't forget to flatten here; otherwise the plot will fail because we can't calculate max of an array
-    if param=='vphpl':
-        return (results[param][mode] + (new_mean - summary[param][mode]["mean"])).flatten()
-    else:
-        return (params[param][mode] + (new_mean - summary[param][mode]["mean"])).flatten()
+    return (params[param][mode] + (new_mean - summary[param][mode]["mean"])).flatten()
 
 # Read the parameters and generate baseline values
 params = generate_all()
 results = vphpl_pphpl_calc(params)
+# copying over the vphpl to the parameters since it is a param for the pphpl calculation
+params['vphpl'] = results['vphpl']
 summary = summarize_params()
