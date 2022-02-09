@@ -7,6 +7,6 @@
 
 # set -e
 
-source setup/checks/check_for_conda.sh
-conda env update --name aces_metrics --file setup/environment.notebook.yml
+source setup/activate_conda.sh
+conda env update --name aces_metrics --file setup/environment.yml
 conda activate aces_metrics
