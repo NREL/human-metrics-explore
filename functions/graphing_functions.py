@@ -121,7 +121,7 @@ def get_data():
 def summarize_params():
     summary = {}
     for param in params:
-        # param is "ms", "occ", "FE" etc
+        # param is "ms", "occ", "FE" etc. Also includes vphpl
         summary[param] = {}
         for mode in params[param]:
             # mode is "wb", "pvt" "bus"
@@ -131,6 +131,8 @@ def summarize_params():
             summary[param][mode]["step"] = (summary[param][mode]["max"] - summary[param][mode]["min"]) / 10
             summary[param][mode]["value"] = summary[param][mode]["mean"]
     return summary
+
+
 
 def create_slider(param_mode):
     param, mode = param_mode.split("_")
@@ -149,4 +151,6 @@ def change_mean_from_kwargs(param_mode, kwargs):
 # Read the parameters and generate baseline values
 params = generate_all()
 results = vphpl_pphpl_calc(params)
+# copying over the vphpl to the parameters since it is a param for the pphpl calculation
+params['vphpl'] = results['vphpl']
 summary = summarize_params()
